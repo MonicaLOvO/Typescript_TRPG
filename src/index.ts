@@ -10,3 +10,5 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// "start:dev": "npx ts-node ./src/index.ts"

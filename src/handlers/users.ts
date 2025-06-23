@@ -2,5 +2,10 @@ import { Request, Response } from "express";
 
 export function getUsers(req: Request, res: Response) 
 {
-    // res
+    res.send([]);
+}
+
+export function getUserByID(req: Request, res: Response) 
+{
+    res.send([]);
 }
