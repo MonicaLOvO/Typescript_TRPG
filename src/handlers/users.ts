@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CreateUserDto } from "../dtos/CreateUser.dto";
 import { CreateUserQueryParams } from "../types/query-params";
 import { User } from "../types/response";
+import { prisma } from "../lib/prisma";
 
 export function getUsers(req: Request, res: Response) 
 {

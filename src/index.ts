@@ -4,7 +4,7 @@ import usersRouter from "./routes/users";
 const app = express();
 
 // Add middleware to parse JSON bodies
-// app.use(express.json());
+app.use(express.json());
 
 app.use('/api/users', usersRouter);
 
