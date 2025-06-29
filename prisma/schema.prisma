@@ -23,3 +23,33 @@ model User {
 
   @@map("users")
 }
+
+model Account {
+  id       String   @id @default(uuid())
+  username String   @unique @db.VarChar(255)
+  email    String   @unique @db.VarChar(255)
+  password String   @db.VarChar(255)
+  
+  // Relationship to characters (assuming CharacterBase will be created later)
+  characters CharacterBase[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("accounts")
+}
+
+// Placeholder for CharacterBase model (you can expand this later)
+model CharacterBase {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(255)
+  
+  // Relationship back to Account
+  accountId String
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("character_bases")
+}
