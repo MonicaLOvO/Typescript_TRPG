@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AccountDto } from "../dtos/Account.dto";
+import { AccountDto, CreateAccountDto } from "../dtos/Account.dto";
 import { Account } from "../types/response";
 import { prisma } from "../lib/prisma";
 import { MapToEntity, MapToDto } from "../Mapper/AccountMapper";
@@ -48,7 +48,7 @@ export function getAccountByID(req: Request, res: Response) {
 
 // POST /api/accounts - Create new account
 export function createAccount(req: Request, res: Response) {
-    const accountDto = req.body as AccountDto;
+    const accountDto = req.body as CreateAccountDto;
     
     // Check if account with same username or email already exists
     prisma.account.findFirst({
@@ -61,14 +61,15 @@ export function createAccount(req: Request, res: Response) {
     })
     .then((existingAccount: any) => {
         if (existingAccount) {
-            return res.status(400).json({ error: 'Username or email already exists' });
+            res.status(400).json({ error: 'Username or email already exists' });
+            return null;
         }
         
         return prisma.account.create({
             data: {
-                username: accountDto.username!,
-                email: accountDto.email!,
-                password: accountDto.password! // Note: In production, hash the password before storing
+                username: accountDto.username,
+                email: accountDto.email,
+                password: accountDto.password // Note: In production, hash the password before storing
             },
             select: {
                 id: true,
@@ -78,7 +79,9 @@ export function createAccount(req: Request, res: Response) {
         });
     })
     .then((account: any) => {
-        res.status(201).json(account);
+        if (account) {
+            res.status(201).json(account);
+        }
     })
     .catch((error: any) => {
         console.error('Error creating account:', error);
@@ -96,7 +99,8 @@ export function updateAccount(req: Request, res: Response) {
     })
     .then((existingAccount: any) => {
         if (!existingAccount) {
-            return res.status(404).json({ error: 'Account not found' });
+            res.status(404).json({ error: 'Account not found' });
+            return null;
         }
         
         // If updating username or email, check for conflicts
@@ -112,7 +116,8 @@ export function updateAccount(req: Request, res: Response) {
             })
             .then((conflictAccount: any) => {
                 if (conflictAccount) {
-                    return res.status(400).json({ error: 'Username or email already exists' });
+                    res.status(400).json({ error: 'Username or email already exists' });
+                    return null;
                 }
                 
                 return prisma.account.update({
@@ -163,15 +168,18 @@ export function deleteAccount(req: Request, res: Response) {
     })
     .then((existingAccount: any) => {
         if (!existingAccount) {
-            return res.status(404).json({ error: 'Account not found' });
+            res.status(404).json({ error: 'Account not found' });
+            return null;
         }
         
         return prisma.account.delete({
             where: { id }
         });
     })
-    .then(() => {
-        res.json({ message: 'Account deleted successfully' });
+    .then((result: any) => {
+        if (result) {
+            res.json({ message: 'Account deleted successfully' });
+        }
     })
     .catch((error: any) => {
         console.error('Error deleting account:', error);

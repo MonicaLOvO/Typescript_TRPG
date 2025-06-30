@@ -6,7 +6,8 @@ export function MapToEntity(dto: AccountDto): Account
     return {
         id: dto.id ?? "",
         username: dto.username ?? "",
-        email: dto.email ?? ""
+        email: dto.email ?? "",
+        password: dto.password ?? ""
     }
 }
 
@@ -15,6 +16,7 @@ export function MapToDto(entity: Account): AccountDto
     return {
         id: entity.id,
         username: entity.username ?? "",
-        email: entity.email ?? ""
+        email: entity.email ?? "",
+        password: entity.password ?? ""
     }
 }

@@ -3,4 +3,10 @@ export interface AccountDto {
     username?: string;
     email?: string;
     password?: string;
+}
+
+export interface CreateAccountDto {
+    username: string;
+    email: string;
+    password: string;
 } 
