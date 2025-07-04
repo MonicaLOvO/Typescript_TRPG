@@ -31,11 +31,109 @@ model Account {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
-  // Relationship to characters (assuming CharacterBase will be created later)
-  //characters CharacterBase[]
+  // Relationship to characters
+  characters characterBase[]
 
   @@map("accounts")
 }
 
-// Placeholder for CharacterBase model (you can expand this later)
+model characterBase {
+  id          String   @id @default(uuid())
+  accountId   String   @db.VarChar(36)
+  name        String   @db.VarChar(255)
+  age         Int?
+  gender      String?  @db.VarChar(50)
+  description String?  @db.Text
+  occupation  String?  @db.VarChar(255)
+  era         String?  @db.VarChar(100)
+  imageId     String?  @db.VarChar(36)
+  
+  // Stats
+  str         Int      @default(0)
+  con         Int      @default(0)
+  siz         Int      @default(0)
+  dex         Int      @default(0)
+  app         Int      @default(0)
+  int         Int      @default(0)
+  pow         Int      @default(0)
+  edu         Int      @default(0)
+  luck        Int?
+  hp          Int      @default(0)
+  mp          Int      @default(0)
+  san         Int      @default(0)
+  mov         Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  account     Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  image       Image?          @relation(fields: [imageId], references: [id])
+  items       characterItems[]
+  status      characterStatus[]
+  
+  @@map("character_bases")
+}
+
+model characterItems {
+  id          String   @id @default(uuid())
+  itemName    String   @db.VarChar(255)
+  value       Int?
+  quantity    Int      @default(1)
+  description String?  @db.Text
+  diceId      String?  @db.VarChar(36)
+  characterId String   @db.VarChar(36)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  character   characterBase @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  dice        Dice?         @relation(fields: [diceId], references: [id])
+  
+  @@map("character_items")
+}
+
+model characterStatus {
+  id          String   @id @default(uuid())
+  statusName  String   @db.VarChar(255)
+  value       Int      @default(0)
+  description String?  @db.Text
+  characterId String   @db.VarChar(36)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  character   characterBase @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  
+  @@map("character_status")
+}
+
+// Placeholder models for Image and Dice (you can expand these later)
+model Image {
+  id          String   @id @default(uuid())
+  url         String   @db.VarChar(500)
+  altText     String?  @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  characters  characterBase[]
+  
+  @@map("images")
+}
+
+model Dice {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(255)
+  sides       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  items       characterItems[]
+  
+  @@map("dice")
+}
 
