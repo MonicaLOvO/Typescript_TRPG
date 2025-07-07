@@ -1,10 +1,10 @@
-import { Request, Response, RequestHandler } from "express";
-import { CharacterBaseDto, CreateCharacterBaseDto, UpdateCharacterBaseDto } from "../dtos/CharacterBase.dto";
-import { prisma } from "../lib/prisma";
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteCharacter = exports.updateCharacter = exports.createCharacter = exports.getCharactersByAccount = exports.getCharacterByID = exports.getCharacters = void 0;
+const prisma_1 = require("../lib/prisma");
 // GET /api/characters - Get all characters
-export const getCharacters: RequestHandler = (req, res) => {
-    prisma.characterBase.findMany({
+const getCharacters = (req, res) => {
+    prisma_1.prisma.characterBase.findMany({
         select: {
             id: true,
             accountId: true,
@@ -32,20 +32,19 @@ export const getCharacters: RequestHandler = (req, res) => {
             updatedAt: true
         }
     })
-    .then((characters: any) => {
+        .then((characters) => {
         res.json(characters);
     })
-    .catch((error: any) => {
+        .catch((error) => {
         console.error('Error fetching characters:', error);
         res.status(500).json([]);
     });
 };
-
+exports.getCharacters = getCharacters;
 // GET /api/characters/:id - Get character by ID
-export const getCharacterByID: RequestHandler = (req, res) => {
+const getCharacterByID = (req, res) => {
     const { id } = req.params;
-    
-    prisma.characterBase.findUnique({
+    prisma_1.prisma.characterBase.findUnique({
         where: { id },
         select: {
             id: true,
@@ -74,24 +73,23 @@ export const getCharacterByID: RequestHandler = (req, res) => {
             updatedAt: true
         }
     })
-    .then((character: any) => {
+        .then((character) => {
         if (!character) {
             res.status(404).json({ error: 'Character not found' });
             return;
         }
         res.json(character);
     })
-    .catch((error: any) => {
+        .catch((error) => {
         console.error('Error fetching character:', error);
         res.status(500).json({ error: 'Internal server error' });
     });
 };
-
+exports.getCharacterByID = getCharacterByID;
 // GET /api/characters/account/:accountId - Get characters by account ID
-export const getCharactersByAccount: RequestHandler = (req, res) => {
+const getCharactersByAccount = (req, res) => {
     const { accountId } = req.params;
-    
-    prisma.characterBase.findMany({
+    prisma_1.prisma.characterBase.findMany({
         where: { accountId },
         select: {
             id: true,
@@ -120,19 +118,18 @@ export const getCharactersByAccount: RequestHandler = (req, res) => {
             updatedAt: true
         }
     })
-    .then((characters: any) => {
+        .then((characters) => {
         res.json(characters);
     })
-    .catch((error: any) => {
+        .catch((error) => {
         console.error('Error fetching characters by account:', error);
         res.status(500).json([]);
     });
 };
-
+exports.getCharactersByAccount = getCharactersByAccount;
 // POST /api/characters - Create new character
-export const createCharacter: RequestHandler = (req, res) => {
-    const characterDto = req.body as CreateCharacterBaseDto;
-    
+const createCharacter = (req, res) => {
+    const characterDto = req.body;
     // Validate required fields
     if (!characterDto.accountId) {
         res.status(400).json({ error: 'accountId is required' });
@@ -142,45 +139,42 @@ export const createCharacter: RequestHandler = (req, res) => {
         res.status(400).json({ error: 'name is required' });
         return;
     }
-    
     console.log('Creating character with data:', characterDto);
-    
     // Check if account exists
-    prisma.account.findUnique({
+    prisma_1.prisma.account.findUnique({
         where: { id: characterDto.accountId }
     })
-    .then((account: any) => {
+        .then((account) => {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u;
         if (!account) {
             console.log('Account not found:', characterDto.accountId);
             res.status(400).json({ error: 'Account not found', accountId: characterDto.accountId });
             return;
         }
-        
         console.log('Account found, creating character...');
-        
-        return prisma.characterBase.create({
+        return prisma_1.prisma.characterBase.create({
             data: {
                 accountId: characterDto.accountId,
                 name: characterDto.name,
-                age: characterDto.age ?? null,
-                gender: characterDto.gender ?? null,
-                description: characterDto.description ?? null,
-                occupation: characterDto.occupation ?? null,
-                era: characterDto.era ?? null,
-                imageId: characterDto.imageId ?? null,
-                str: characterDto.str ?? 0,
-                con: characterDto.con ?? 0,
-                siz: characterDto.siz ?? 0,
-                dex: characterDto.dex ?? 0,
-                app: characterDto.app ?? 0,
-                int: characterDto.int ?? 0,
-                pow: characterDto.pow ?? 0,
-                edu: characterDto.edu ?? 0,
-                luck: characterDto.luck ?? null,
-                hp: characterDto.hp ?? 0,
-                mp: characterDto.mp ?? 0,
-                san: characterDto.san ?? 0,
-                mov: characterDto.mov ?? 0
+                age: (_a = characterDto.age) !== null && _a !== void 0 ? _a : null,
+                gender: (_b = characterDto.gender) !== null && _b !== void 0 ? _b : null,
+                description: (_c = characterDto.description) !== null && _c !== void 0 ? _c : null,
+                occupation: (_d = characterDto.occupation) !== null && _d !== void 0 ? _d : null,
+                era: (_e = characterDto.era) !== null && _e !== void 0 ? _e : null,
+                imageId: (_f = characterDto.imageId) !== null && _f !== void 0 ? _f : null,
+                str: (_g = characterDto.str) !== null && _g !== void 0 ? _g : 0,
+                con: (_h = characterDto.con) !== null && _h !== void 0 ? _h : 0,
+                siz: (_j = characterDto.siz) !== null && _j !== void 0 ? _j : 0,
+                dex: (_k = characterDto.dex) !== null && _k !== void 0 ? _k : 0,
+                app: (_l = characterDto.app) !== null && _l !== void 0 ? _l : 0,
+                int: (_m = characterDto.int) !== null && _m !== void 0 ? _m : 0,
+                pow: (_o = characterDto.pow) !== null && _o !== void 0 ? _o : 0,
+                edu: (_p = characterDto.edu) !== null && _p !== void 0 ? _p : 0,
+                luck: (_q = characterDto.luck) !== null && _q !== void 0 ? _q : null,
+                hp: (_r = characterDto.hp) !== null && _r !== void 0 ? _r : 0,
+                mp: (_s = characterDto.mp) !== null && _s !== void 0 ? _s : 0,
+                san: (_t = characterDto.san) !== null && _t !== void 0 ? _t : 0,
+                mov: (_u = characterDto.mov) !== null && _u !== void 0 ? _u : 0
             },
             select: {
                 id: true,
@@ -210,63 +204,41 @@ export const createCharacter: RequestHandler = (req, res) => {
             }
         });
     })
-    .then((character: any) => {
+        .then((character) => {
         if (character) {
             console.log('Character created successfully:', character.id);
             res.status(201).json(character);
-        } else {
+        }
+        else {
             // This should not happen, but just in case
             res.status(500).json({ error: 'Failed to create character' });
         }
     })
-    .catch((error: any) => {
+        .catch((error) => {
         console.error('Error creating character:', error);
-        res.status(500).json({ 
-            error: 'Internal server error', 
+        res.status(500).json({
+            error: 'Internal server error',
             details: error.message,
-            code: error.code 
+            code: error.code
         });
     });
 };
-
+exports.createCharacter = createCharacter;
 // PUT /api/characters/:id - Update character
-export const updateCharacter: RequestHandler = (req, res) => {
+const updateCharacter = (req, res) => {
     const { id } = req.params;
-    const characterDto = req.body as UpdateCharacterBaseDto;
-    
-    prisma.characterBase.findUnique({
+    const characterDto = req.body;
+    prisma_1.prisma.characterBase.findUnique({
         where: { id }
     })
-    .then((existingCharacter: any) => {
+        .then((existingCharacter) => {
         if (!existingCharacter) {
             res.status(404).json({ error: 'Character not found' });
             return;
         }
-        
-        return prisma.characterBase.update({
+        return prisma_1.prisma.characterBase.update({
             where: { id },
-            data: {
-                ...(characterDto.name !== undefined && { name: characterDto.name }),
-                ...(characterDto.age !== undefined && { age: characterDto.age }),
-                ...(characterDto.gender !== undefined && { gender: characterDto.gender }),
-                ...(characterDto.description !== undefined && { description: characterDto.description }),
-                ...(characterDto.occupation !== undefined && { occupation: characterDto.occupation }),
-                ...(characterDto.era !== undefined && { era: characterDto.era }),
-                ...(characterDto.imageId !== undefined && { imageId: characterDto.imageId }),
-                ...(characterDto.str !== undefined && { str: characterDto.str }),
-                ...(characterDto.con !== undefined && { con: characterDto.con }),
-                ...(characterDto.siz !== undefined && { siz: characterDto.siz }),
-                ...(characterDto.dex !== undefined && { dex: characterDto.dex }),
-                ...(characterDto.app !== undefined && { app: characterDto.app }),
-                ...(characterDto.int !== undefined && { int: characterDto.int }),
-                ...(characterDto.pow !== undefined && { pow: characterDto.pow }),
-                ...(characterDto.edu !== undefined && { edu: characterDto.edu }),
-                ...(characterDto.luck !== undefined && { luck: characterDto.luck }),
-                ...(characterDto.hp !== undefined && { hp: characterDto.hp }),
-                ...(characterDto.mp !== undefined && { mp: characterDto.mp }),
-                ...(characterDto.san !== undefined && { san: characterDto.san }),
-                ...(characterDto.mov !== undefined && { mov: characterDto.mov })
-            },
+            data: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, (characterDto.name !== undefined && { name: characterDto.name })), (characterDto.age !== undefined && { age: characterDto.age })), (characterDto.gender !== undefined && { gender: characterDto.gender })), (characterDto.description !== undefined && { description: characterDto.description })), (characterDto.occupation !== undefined && { occupation: characterDto.occupation })), (characterDto.era !== undefined && { era: characterDto.era })), (characterDto.imageId !== undefined && { imageId: characterDto.imageId })), (characterDto.str !== undefined && { str: characterDto.str })), (characterDto.con !== undefined && { con: characterDto.con })), (characterDto.siz !== undefined && { siz: characterDto.siz })), (characterDto.dex !== undefined && { dex: characterDto.dex })), (characterDto.app !== undefined && { app: characterDto.app })), (characterDto.int !== undefined && { int: characterDto.int })), (characterDto.pow !== undefined && { pow: characterDto.pow })), (characterDto.edu !== undefined && { edu: characterDto.edu })), (characterDto.luck !== undefined && { luck: characterDto.luck })), (characterDto.hp !== undefined && { hp: characterDto.hp })), (characterDto.mp !== undefined && { mp: characterDto.mp })), (characterDto.san !== undefined && { san: characterDto.san })), (characterDto.mov !== undefined && { mov: characterDto.mov })),
             select: {
                 id: true,
                 accountId: true,
@@ -295,39 +267,39 @@ export const updateCharacter: RequestHandler = (req, res) => {
             }
         });
     })
-    .then((character: any) => {
-        if (character) res.json(character);
+        .then((character) => {
+        if (character)
+            res.json(character);
     })
-    .catch((error: any) => {
+        .catch((error) => {
         console.error('Error updating character:', error);
         res.status(500).json({ error: 'Internal server error' });
     });
 };
-
+exports.updateCharacter = updateCharacter;
 // DELETE /api/characters/:id - Delete character
-export const deleteCharacter: RequestHandler = (req, res) => {
+const deleteCharacter = (req, res) => {
     const { id } = req.params;
-    
-    prisma.characterBase.findUnique({
+    prisma_1.prisma.characterBase.findUnique({
         where: { id }
     })
-    .then((existingCharacter: any) => {
+        .then((existingCharacter) => {
         if (!existingCharacter) {
             res.status(404).json({ error: 'Character not found' });
             return;
         }
-        
-        return prisma.characterBase.delete({
+        return prisma_1.prisma.characterBase.delete({
             where: { id }
         });
     })
-    .then((result: any) => {
+        .then((result) => {
         if (result) {
             res.json({ message: 'Character deleted successfully' });
         }
     })
-    .catch((error: any) => {
+        .catch((error) => {
         console.error('Error deleting character:', error);
         res.status(500).json({ error: 'Internal server error' });
     });
-}; 
+};
+exports.deleteCharacter = deleteCharacter;
