@@ -27,13 +27,15 @@ model Account {
   id        String   @id @default(uuid())
   username  String   @unique @db.VarChar(255)
   email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
+  password  String   @db.VarChar(255) 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
   // Relationship to characters
   characters characterBase[]
-
+  // Relationship to rooms
+  rooms      Room[]
+  
   @@map("accounts")
 }
 
@@ -135,5 +137,18 @@ model Dice {
   items       characterItems[]
   
   @@map("dice")
+}
+
+model Room {
+  id        String   @id @default(uuid())
+  accountId String   @db.VarChar(36)
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  account    Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  
+  @@map("rooms")
 }
 
