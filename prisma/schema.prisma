@@ -148,7 +148,83 @@ model Room {
   
   // Relationships
   account    Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  characters RoomCharacter[]
   
   @@map("rooms")
+}
+
+model RoomCharacter {
+  id        String   @id @default(uuid())
+  roomId    String   @db.VarChar(36)
+  actorId   String   @db.VarChar(36)
+  sourceId  String?  @db.VarChar(36)
+  name      String   @db.VarChar(255)
+  age       Int?
+  gender    String?  @db.VarChar(50)
+  description String? @db.Text
+  occupation String? @db.VarChar(255)
+  era       String?  @db.VarChar(100)
+  imageId   String?  @db.VarChar(36)
+  
+  // Stats
+  str       Int      @default(0)
+  con       Int      @default(0)
+  siz       Int      @default(0)
+  dex       Int      @default(0)
+  app       Int      @default(0)
+  int       Int      @default(0)
+  pow       Int      @default(0)
+  edu       Int      @default(0)
+  luck      Int?
+  hp        Int      @default(0)
+  mp        Int      @default(0)
+  san       Int      @default(0)
+  mov       Int      @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  image     Image?   @relation(fields: [imageId], references: [id])
+  items     RoomCharacterItem[]
+  status    RoomCharacterStatus[]
+  
+  @@map("room_characters")
+}
+
+model RoomCharacterItem {
+  id          String   @id @default(uuid())
+  itemName    String   @db.VarChar(255)
+  value       Int?
+  quantity    Int      @default(1)
+  description String?  @db.Text
+  diceId      String?  @db.VarChar(36)
+  characterId String   @db.VarChar(36)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  character   RoomCharacter @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  dice        Dice?         @relation(fields: [diceId], references: [id])
+  
+  @@map("room_character_items")
+}
+
+model RoomCharacterStatus {
+  id          String   @id @default(uuid())
+  statusName  String   @db.VarChar(255)
+  value       Int      @default(0)
+  description String?  @db.Text
+  characterId String   @db.VarChar(36)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  character   RoomCharacter @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  
+  @@map("room_character_status")
 }
 
