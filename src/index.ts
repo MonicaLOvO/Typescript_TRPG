@@ -5,6 +5,7 @@ import charactersRouter from "./routes/characters";
 import characterItemsRouter from "./routes/characterItems";
 import characterStatusRouter from "./routes/characterStatus";
 import roomsRouter from "./routes/rooms";
+import actorsRouter from "./routes/actors";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use('/api/characters', charactersRouter);
 app.use('/api/character-items', characterItemsRouter);
 app.use('/api/character-status', characterStatusRouter);
 app.use('/api/rooms', roomsRouter);
+app.use('/api/actors', actorsRouter);
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World');

@@ -35,6 +35,8 @@ model Account {
   characters characterBase[]
   // Relationship to rooms
   rooms      Room[]
+  // Relationship to room actors
+  roomActors RoomActor[]
   
   @@map("accounts")
 }
@@ -122,6 +124,7 @@ model Image {
   
   // Relationships
   characters  characterBase[]
+  roomCharacters RoomCharacter[]
   
   @@map("images")
 }
@@ -135,6 +138,7 @@ model Dice {
   
   // Relationships
   items       characterItems[]
+  roomCharacterItems RoomCharacterItem[]
   
   @@map("dice")
 }
@@ -149,6 +153,7 @@ model Room {
   // Relationships
   account    Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
   characters RoomCharacter[]
+  actors     RoomActor[]
   
   @@map("rooms")
 }
@@ -186,11 +191,43 @@ model RoomCharacter {
   
   // Relationships
   room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  actor     RoomActor @relation(fields: [actorId], references: [id], onDelete: Cascade)
   image     Image?   @relation(fields: [imageId], references: [id])
   items     RoomCharacterItem[]
   status    RoomCharacterStatus[]
   
   @@map("room_characters")
+}
+
+model RoomActor {
+  id        String   @id @default(uuid())
+  roomId    String   @db.VarChar(36)
+  accountId String   @db.VarChar(36)
+  role      RoleType
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  room       Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  account    Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  characters RoomCharacter[]
+  notes      Note[]
+  
+  @@map("room_actors")
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  actorId   String   @db.VarChar(36)
+  title     String   @db.VarChar(255)
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationships
+  actor      RoomActor @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  
+  @@map("notes")
 }
 
 model RoomCharacterItem {
@@ -226,5 +263,12 @@ model RoomCharacterStatus {
   character   RoomCharacter @relation(fields: [characterId], references: [id], onDelete: Cascade)
   
   @@map("room_character_status")
+}
+
+
+enum RoleType {
+  PLAYER
+  GAME_MASTER
+  OBSERVER
 }
 
