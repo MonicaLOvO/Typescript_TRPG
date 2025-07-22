@@ -125,6 +125,7 @@ model Image {
   // Relationships
   characters  characterBase[]
   roomCharacters RoomCharacter[]
+  classBases  ClassBase[]
   
   @@map("images")
 }
@@ -139,6 +140,7 @@ model Dice {
   // Relationships
   items       characterItems[]
   roomCharacterItems RoomCharacterItem[]
+  classItems  ClassItems[]
   
   @@map("dice")
 }
@@ -263,6 +265,77 @@ model RoomCharacterStatus {
   character   RoomCharacter @relation(fields: [characterId], references: [id], onDelete: Cascade)
   
   @@map("room_character_status")
+}
+
+model ClassBase {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(255)
+  age         Int?
+  gender      String?  @db.VarChar(50)
+  description String?  @db.Text
+  occupation  String?  @db.VarChar(255)
+  era         String?  @db.VarChar(100)
+  imageId     String?  @db.VarChar(36)
+  
+  // Stats
+  str         Int      @default(0)
+  con         Int      @default(0)
+  siz         Int      @default(0)
+  dex         Int      @default(0)
+  app         Int      @default(0)
+  int         Int      @default(0)
+  pow         Int      @default(0)
+  edu         Int      @default(0)
+  luck        Int?
+  hp          Int      @default(0)
+  mp          Int      @default(0)
+  san         Int      @default(0)
+  mov         Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  image       Image?          @relation(fields: [imageId], references: [id])
+  items       ClassItems[]
+  status      ClassStatus[]
+  
+  @@map("class_bases")
+}
+
+model ClassItems {
+  id          String   @id @default(uuid())
+  itemName    String   @db.VarChar(255)
+  value       Int?
+  quantity    Int      @default(1)
+  description String?  @db.Text
+  diceId      String?  @db.VarChar(36)
+  classId     String   @db.VarChar(36)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  class       ClassBase @relation(fields: [classId], references: [id], onDelete: Cascade)
+  dice        Dice?     @relation(fields: [diceId], references: [id])
+  
+  @@map("class_items")
+}
+
+model ClassStatus {
+  id          String   @id @default(uuid())
+  statusName  String   @db.VarChar(255)
+  value       Int      @default(0)
+  description String?  @db.Text
+  classId     String   @db.VarChar(36)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationships
+  class       ClassBase @relation(fields: [classId], references: [id], onDelete: Cascade)
+  
+  @@map("class_status")
 }
 
 
