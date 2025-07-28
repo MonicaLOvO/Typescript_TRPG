@@ -31,7 +31,8 @@ export const getClassItemsById = async (req: Request, res: Response) => {
         });
 
         if (!classItem) {
-            return res.status(404).json({ error: 'Class item not found' });
+            res.status(404).json({ error: 'Class item not found' });
+            return;
         }
 
         res.json(classItem);

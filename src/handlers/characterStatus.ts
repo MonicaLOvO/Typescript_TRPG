@@ -28,6 +28,12 @@ export function getCharacterStatus(req: Request, res: Response) {
 export function getCharacterStatusByID(req: Request, res: Response) {
     const { id } = req.params;
     
+    // Validate that id is provided
+    if (!id) {
+        res.status(400).json({ error: 'Character status ID is required' });
+        return;
+    }
+    
     prisma.characterStatus.findUnique({
         where: { id },
         select: {
@@ -56,6 +62,12 @@ export function getCharacterStatusByID(req: Request, res: Response) {
 export function getCharacterStatusByCharacter(req: Request, res: Response) {
     const { characterId } = req.params;
     
+    // Validate that characterId is provided
+    if (!characterId) {
+        res.status(400).json({ error: 'Character ID is required' });
+        return;
+    }
+    
     prisma.characterStatus.findMany({
         where: { characterId },
         select: {
@@ -80,6 +92,14 @@ export function getCharacterStatusByCharacter(req: Request, res: Response) {
 // POST /api/character-status - Create new character status
 export function createCharacterStatus(req: Request, res: Response) {
     const statusDto = req.body as CreateCharacterStatusDto;
+    
+    // Validate required fields
+    if (!statusDto.characterId || !statusDto.statusName) {
+        res.status(400).json({ 
+            error: 'Missing required fields: characterId and statusName are required' 
+        });
+        return;
+    }
     
     // Check if character exists
     prisma.characterBase.findUnique({
@@ -125,6 +145,12 @@ export function updateCharacterStatus(req: Request, res: Response) {
     const { id } = req.params;
     const statusDto = req.body as CharacterStatusDto;
     
+    // Validate that id is provided
+    if (!id) {
+        res.status(400).json({ error: 'Character status ID is required' });
+        return;
+    }
+    
     prisma.characterStatus.findUnique({
         where: { id }
     })
@@ -164,6 +190,12 @@ export function updateCharacterStatus(req: Request, res: Response) {
 // DELETE /api/character-status/:id - Delete character status
 export function deleteCharacterStatus(req: Request, res: Response) {
     const { id } = req.params;
+    
+    // Validate that id is provided
+    if (!id) {
+        res.status(400).json({ error: 'Character status ID is required' });
+        return;
+    }
     
     prisma.characterStatus.findUnique({
         where: { id }
