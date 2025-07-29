@@ -1,10 +1,8 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Request, Response, RequestHandler } from 'express';
 import { CreateClassStatusDto, UpdateClassStatusDto } from '../dtos/ClassStatus.dto';
+import { prisma } from '../lib/prisma';
 
-const prisma = new PrismaClient();
-
-export const getAllClassStatus = async (req: Request, res: Response) => {
+export const getAllClassStatus: RequestHandler = async (req, res) => {
     try {
         const classStatus = await prisma.classStatus.findMany({
             include: {
@@ -18,7 +16,7 @@ export const getAllClassStatus = async (req: Request, res: Response) => {
     }
 };
 
-export const getClassStatusById = async (req: Request, res: Response) => {
+export const getClassStatusById: RequestHandler = async (req, res) => {
     try {
         const { id } = req.params;
         const classStatusItem = await prisma.classStatus.findUnique({
@@ -29,7 +27,8 @@ export const getClassStatusById = async (req: Request, res: Response) => {
         });
 
         if (!classStatusItem) {
-            return res.status(404).json({ error: 'Class status not found' });
+            res.status(404).json({ error: 'Class status not found' });
+            return;
         }
 
         res.json(classStatusItem);
@@ -39,7 +38,7 @@ export const getClassStatusById = async (req: Request, res: Response) => {
     }
 };
 
-export const getClassStatusByClassId = async (req: Request, res: Response) => {
+export const getClassStatusByClassId: RequestHandler = async (req, res) => {
     try {
         const { classId } = req.params;
         const classStatus = await prisma.classStatus.findMany({
@@ -52,7 +51,7 @@ export const getClassStatusByClassId = async (req: Request, res: Response) => {
     }
 };
 
-export const createClassStatus = async (req: Request, res: Response) => {
+export const createClassStatus: RequestHandler = async (req, res) => {
     try {
         const classStatusData: CreateClassStatusDto = req.body;
 
@@ -73,7 +72,7 @@ export const createClassStatus = async (req: Request, res: Response) => {
     }
 };
 
-export const updateClassStatus = async (req: Request, res: Response) => {
+export const updateClassStatus: RequestHandler = async (req, res) => {
     try {
         const { id } = req.params;
         const updateData: UpdateClassStatusDto = req.body;
@@ -93,7 +92,7 @@ export const updateClassStatus = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteClassStatus = async (req: Request, res: Response) => {
+export const deleteClassStatus: RequestHandler = async (req, res) => {
     try {
         const { id } = req.params;
         await prisma.classStatus.delete({

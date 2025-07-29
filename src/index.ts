@@ -7,9 +7,9 @@ import characterStatusRouter from "./routes/characterStatus";
 import roomsRouter from "./routes/rooms";
 import actorsRouter from "./routes/actors";
 import notesRouter from "./routes/notes";
-// import classBaseRouter from "./routes/classBase";
-// import classItemsRouter from "./routes/classItems";
-// import classStatusRouter from "./routes/classStatus";
+import classBaseRouter from "./routes/classBase";
+import classItemsRouter from "./routes/classItems";
+import classStatusRouter from "./routes/classStatus";
 
 const app = express();
 
@@ -24,9 +24,9 @@ app.use('/api/character-status', characterStatusRouter);
 app.use('/api/rooms', roomsRouter);
 app.use('/api/actors', actorsRouter);
 app.use('/api/notes', notesRouter);
-// app.use('/api/class-bases', classBaseRouter);
-// app.use('/api/class-items', classItemsRouter);
-// app.use('/api/class-status', classStatusRouter);
+app.use('/api/class-bases', classBaseRouter);
+app.use('/api/class-items', classItemsRouter);
+app.use('/api/class-status', classStatusRouter);
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World');

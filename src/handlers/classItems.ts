@@ -1,10 +1,8 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Request, Response, RequestHandler } from 'express';
 import { CreateClassItemsDto, UpdateClassItemsDto } from '../dtos/ClassItems.dto';
+import { prisma } from '../lib/prisma';
 
-const prisma = new PrismaClient();
-
-export const getAllClassItems = async (req: Request, res: Response) => {
+export const getAllClassItems: RequestHandler = async (req, res) => {
     try {
         const classItems = await prisma.classItems.findMany({
             include: {
@@ -19,7 +17,7 @@ export const getAllClassItems = async (req: Request, res: Response) => {
     }
 };
 
-export const getClassItemsById = async (req: Request, res: Response) => {
+export const getClassItemsById: RequestHandler = async (req, res) => {
     try {
         const { id } = req.params;
         const classItem = await prisma.classItems.findUnique({
@@ -42,7 +40,7 @@ export const getClassItemsById = async (req: Request, res: Response) => {
     }
 };
 
-export const getClassItemsByClassId = async (req: Request, res: Response) => {
+export const getClassItemsByClassId: RequestHandler = async (req, res) => {
     try {
         const { classId } = req.params;
         const classItems = await prisma.classItems.findMany({
@@ -58,7 +56,7 @@ export const getClassItemsByClassId = async (req: Request, res: Response) => {
     }
 };
 
-export const createClassItems = async (req: Request, res: Response) => {
+export const createClassItems: RequestHandler = async (req, res) => {
     try {
         const classItemData: CreateClassItemsDto = req.body;
 
@@ -80,7 +78,7 @@ export const createClassItems = async (req: Request, res: Response) => {
     }
 };
 
-export const updateClassItems = async (req: Request, res: Response) => {
+export const updateClassItems: RequestHandler = async (req, res) => {
     try {
         const { id } = req.params;
         const updateData: UpdateClassItemsDto = req.body;
@@ -101,7 +99,7 @@ export const updateClassItems = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteClassItems = async (req: Request, res: Response) => {
+export const deleteClassItems: RequestHandler = async (req, res) => {
     try {
         const { id } = req.params;
         await prisma.classItems.delete({
